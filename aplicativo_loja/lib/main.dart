@@ -1,14 +1,13 @@
-import './telas/pedidos_tela.dart';
+import 'telas/order_screen.dart';
 
-import './telas/carrinho_tela.dart';
-import './providers/carrinho.dart';
+import 'telas/cart_screen.dart';
+import 'providers/cart.dart';
 import 'package:flutter/material.dart';
-import 'providers/pedidos.dart';
-import 'telas/produtos_lista.dart';
-import './telas/produto_detalhes.dart';
-import './providers/produtos.dart';
+import 'providers/orders.dart';
+import 'telas/products_list.dart';
+import 'telas/product_detail.dart';
+import 'providers/products.dart';
 import 'package:provider/provider.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -18,30 +17,25 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-          value: Produtos(),
+          value: Products(),
         ),
-        ChangeNotifierProvider.value(
-          value: Carrinho()
-        ),
-        ChangeNotifierProvider.value(
-          value: Pedidos()
-        )
+        ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProvider.value(value: Orders())
       ],
       child: MaterialApp(
         title: 'Flutter Loja Virtual',
         theme: ThemeData(
           primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
+          colorScheme: ColorScheme.fromSwatch(),
           fontFamily: 'Lato',
         ),
         home: ListaDeProdutosTela(),
         routes: {
-          DetalhesDoProdutoTela.nomeDaRota: (contexto) => DetalhesDoProdutoTela(),
-          CarrinhoTela.nomeDaRota: (contexto) => CarrinhoTela(),
-          PedidosTela.nomeDaRota: (contexto) => PedidosTela()
+          ProductDetailsScreen.nomeDaRota: (_) => ProductDetailsScreen(),
+          CartScreen.nomeDaRota: (_) => CartScreen(),
+          OrderScreen.nomeDaRota: (_) => OrderScreen()
         },
       ),
     );
   }
 }
-

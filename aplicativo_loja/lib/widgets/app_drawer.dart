@@ -1,8 +1,7 @@
-import '../telas/pedidos_tela.dart';
+import '../telas/order_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,7 +26,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Pedidos'),
             onTap: () {
               //Volta para a home page
-              Navigator.of(context).pushNamed(PedidosTela.nomeDaRota);
+              Navigator.of(context).pushNamed(OrderScreen.nomeDaRota);
             },
           )
         ],
