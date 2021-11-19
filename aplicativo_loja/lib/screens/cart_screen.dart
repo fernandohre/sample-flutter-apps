@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
-  static const nomeDaRota = '/carrinho';
+  static const routeName = '/carrinho';
 
   const CartScreen({Key key}) : super(key: key);
 

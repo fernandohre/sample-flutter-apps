@@ -1,11 +1,13 @@
-import 'telas/order_screen.dart';
+import 'package:aplicativo_loja/widgets/user_products_screen.dart';
 
-import 'telas/cart_screen.dart';
+import 'screens/order_screen.dart';
+
+import 'screens/cart_screen.dart';
 import 'providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'providers/orders.dart';
-import 'telas/products_list.dart';
-import 'telas/product_detail.dart';
+import 'screens/products_list.dart';
+import 'screens/product_detail.dart';
 import 'providers/products.dart';
 import 'package:provider/provider.dart';
 
@@ -25,15 +27,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Loja Virtual',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
-          colorScheme: ColorScheme.fromSwatch(),
-          fontFamily: 'Lato',
-        ),
+            primaryColor: Colors.purple,
+            colorScheme: ColorScheme.fromSwatch(accentColor: Colors.deepOrange),
+            fontFamily: 'Lato',
+            appBarTheme: AppBarTheme(backgroundColor: Colors.purple)),
         home: ListaDeProdutosTela(),
         routes: {
-          ProductDetailsScreen.nomeDaRota: (_) => ProductDetailsScreen(),
-          CartScreen.nomeDaRota: (_) => CartScreen(),
-          OrderScreen.nomeDaRota: (_) => OrderScreen()
+          ProductDetailsScreen.routeName: (_) => ProductDetailsScreen(),
+          CartScreen.routeName: (_) => CartScreen(),
+          OrderScreen.routeName: (_) => OrderScreen(),
+          UserProductsScreen.routeName: (_) => UserProductsScreen()
         },
       ),
     );

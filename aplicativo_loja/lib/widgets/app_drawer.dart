@@ -1,4 +1,6 @@
-import '../telas/order_screen.dart';
+import 'package:aplicativo_loja/widgets/user_products_screen.dart';
+
+import '../screens/order_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -26,7 +28,16 @@ class AppDrawer extends StatelessWidget {
             title: Text('Pedidos'),
             onTap: () {
               //Volta para a home page
-              Navigator.of(context).pushNamed(OrderScreen.nomeDaRota);
+              Navigator.of(context).pushNamed(OrderScreen.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Gerenciar produtos'),
+            onTap: () {
+              //Volta para a home page
+              Navigator.of(context).pushNamed(UserProductsScreen.routeName);
             },
           )
         ],

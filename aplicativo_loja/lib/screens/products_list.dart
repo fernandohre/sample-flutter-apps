@@ -51,7 +51,7 @@ class _ListaDeProdutosTelaState extends State<ListaDeProdutosTela> {
               child: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.nomeDaRota);
+                  Navigator.of(context).pushNamed(CartScreen.routeName);
                 },
               ),
             )

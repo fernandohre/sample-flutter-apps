@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 
 class OrderScreen extends StatelessWidget {
-  static const nomeDaRota = '/pedidos';
+  static const routeName = '/pedidos';
   @override
   Widget build(BuildContext context) {
     final pedidosProvider = Provider.of<Orders>(context);

@@ -1,10 +1,9 @@
 import 'package:aplicativo_loja/providers/cart.dart';
-import 'package:aplicativo_loja/providers/products.dart';
 import 'package:provider/provider.dart';
 
 import '../models/produto.dart';
 
-import '../telas/product_detail.dart';
+import '../screens/product_detail.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
@@ -18,7 +17,7 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(ProductDetailsScreen.nomeDaRota,
+            Navigator.of(context).pushNamed(ProductDetailsScreen.routeName,
                 arguments: product.id);
           },
           child: Image.network(product.urlDaImagem, fit: BoxFit.cover),
@@ -55,7 +54,7 @@ class ProductItem extends StatelessWidget {
                 ),
               ));
             },
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).primaryColor,
           ),
         ),
       ),
