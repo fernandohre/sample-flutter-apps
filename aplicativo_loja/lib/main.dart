@@ -1,3 +1,4 @@
+import 'package:aplicativo_loja/widgets/edit_product_screen.dart';
 import 'package:aplicativo_loja/widgets/user_products_screen.dart';
 
 import 'screens/order_screen.dart';
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
           ProductDetailsScreen.routeName: (_) => ProductDetailsScreen(),
           CartScreen.routeName: (_) => CartScreen(),
           OrderScreen.routeName: (_) => OrderScreen(),
-          UserProductsScreen.routeName: (_) => UserProductsScreen()
+          UserProductsScreen.routeName: (_) => UserProductsScreen(),
+          EditProductScreen.routeName: (_) => EditProductScreen()
         },
       ),
     );
