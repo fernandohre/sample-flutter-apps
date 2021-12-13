@@ -57,4 +57,10 @@ class Products with ChangeNotifier {
     //será recarregada chamando o método build do widget
     notifyListeners();
   }
+
+  void update(Product item) {
+    _itens.remove(item);
+    _itens.add(item);
+    notifyListeners();
+  }
 }

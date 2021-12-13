@@ -1,7 +1,9 @@
 import 'package:aplicativo_loja/models/produto.dart';
+import 'package:aplicativo_loja/providers/products.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -43,7 +45,14 @@ class _EditProductScreen extends State<EditProductScreen> {
   }
 
   void _saveForm() {
-    _form.currentState.validate();
+    var isValid = _form.currentState.validate();
+    if (!isValid) return;
+
+    if (produtoEditado.id != null) {
+      Provider.of<Products>(context).update(produtoEditado);
+    } else {
+      Provider.of<Products>(context).add(produtoEditado);
+    }
     _form.currentState.save();
   }
 
@@ -66,6 +75,7 @@ class _EditProductScreen extends State<EditProductScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value.isEmpty) return 'O título não foi informado!';
+                    //Se retornar nulo é porque ta válido.
                     return null;
                   },
                   onFieldSubmitted: (value) {
@@ -85,6 +95,10 @@ class _EditProductScreen extends State<EditProductScreen> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   focusNode: _precoFocusNode,
+                  validator: (value) {
+                    if (value.isEmpty) return 'O preço não foi informado';
+                    return null;
+                  },
                   onFieldSubmitted: (value) {
                     FocusScope.of(context).requestFocus(_descricaoFocusNode);
                   },
@@ -101,6 +115,11 @@ class _EditProductScreen extends State<EditProductScreen> {
                   decoration: InputDecoration(labelText: 'Descrição'),
                   maxLines: 3,
                   focusNode: _descricaoFocusNode,
+                  validator: (value) {
+                    if (value.isEmpty)
+                      return 'Descrição do produto é obrigatória!';
+                    return null;
+                  },
                   keyboardType: TextInputType.multiline,
                   onSaved: (value) {
                     produtoEditado = Product(
@@ -135,6 +154,21 @@ class _EditProductScreen extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlControler,
                       focusNode: _imageBoxFocusNode,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Informe uma URL para a imagem.';
+                        }
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('https')) {
+                          return 'URL inválida.';
+                        }
+                        if (!value.endsWith('.png') &&
+                            !value.endsWith('.jpg') &&
+                            !value.endsWith('.jpeg')) {
+                          return 'Formato da imagem inválido! formatos válidos: png, jpg, jpeg.';
+                        }
+                        return null;
+                      },
                       onSaved: (value) {
                         produtoEditado = Product(
                             id: null,
