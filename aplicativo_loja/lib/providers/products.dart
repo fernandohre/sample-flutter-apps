@@ -63,4 +63,13 @@ class Products with ChangeNotifier {
     _itens.add(item);
     notifyListeners();
   }
+
+  void delete(String id) {
+    _itens.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+
+  Product findById(String id) {
+    return _itens.firstWhere((element) => element.id == id);
+  }
 }

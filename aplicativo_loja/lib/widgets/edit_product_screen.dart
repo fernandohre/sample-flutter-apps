@@ -17,15 +17,29 @@ class _EditProductScreen extends State<EditProductScreen> {
   final _imageUrlControler = TextEditingController();
   final _imageBoxFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
+  var isInit = true;
 
   var produtoEditado = new Product(
       id: null, titulo: '', descricao: '', preco: null, urlDaImagem: '');
 
   @override
   void initState() {
-    // TODO: implement initState
     _imageBoxFocusNode.addListener(_updateUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if (productId != null) {
+        produtoEditado =
+            Provider.of<Products>(context, listen: true).findById(productId);
+        _imageUrlControler.text = produtoEditado.urlDaImagem;
+      }
+    }
+    isInit = false;
+    super.didChangeDependencies();
   }
 
   void _updateUrl() {
@@ -38,7 +52,6 @@ class _EditProductScreen extends State<EditProductScreen> {
   void dispose() {
     _imageBoxFocusNode.removeListener(_updateUrl);
     _descricaoFocusNode.dispose();
-    _descricaoFocusNode.dispose();
     _imageBoxFocusNode.dispose();
     _imageUrlControler.dispose();
     super.dispose();
@@ -47,13 +60,15 @@ class _EditProductScreen extends State<EditProductScreen> {
   void _saveForm() {
     var isValid = _form.currentState.validate();
     if (!isValid) return;
+    _form.currentState.save();
 
     if (produtoEditado.id != null) {
-      Provider.of<Products>(context).update(produtoEditado);
+      Provider.of<Products>(context, listen: false).update(produtoEditado);
     } else {
-      Provider.of<Products>(context).add(produtoEditado);
+      Provider.of<Products>(context, listen: false).add(produtoEditado);
     }
-    _form.currentState.save();
+
+    Navigator.of(context).pop();
   }
 
   Widget build(BuildContext context) {
@@ -69,6 +84,7 @@ class _EditProductScreen extends State<EditProductScreen> {
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue: produtoEditado.titulo,
                   decoration: InputDecoration(labelText: 'Título'),
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
@@ -91,6 +107,7 @@ class _EditProductScreen extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: produtoEditado.preco.toString(),
                   decoration: InputDecoration(labelText: 'Preço'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
@@ -112,6 +129,7 @@ class _EditProductScreen extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: produtoEditado.descricao,
                   decoration: InputDecoration(labelText: 'Descrição'),
                   maxLines: 3,
                   focusNode: _descricaoFocusNode,
@@ -169,14 +187,16 @@ class _EditProductScreen extends State<EditProductScreen> {
                         }
                         return null;
                       },
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
                       onSaved: (value) {
                         produtoEditado = Product(
                             id: null,
-                            titulo: value,
+                            titulo: produtoEditado.titulo,
                             descricao: produtoEditado.descricao,
                             preco: produtoEditado.preco,
                             urlDaImagem: value);
-                        _saveForm();
                       },
                     ))
                   ],

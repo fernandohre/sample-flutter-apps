@@ -35,7 +35,7 @@ class ProductItem extends StatelessWidget {
                 color: Theme.of(context).secondaryHeaderColor),
           ),
           title: Text(
-            'Little test',
+            product.titulo,
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
