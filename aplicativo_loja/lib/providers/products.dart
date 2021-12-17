@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _itens = [
+  final List<Product> _itens = [
     Product(
       id: 'p1',
       titulo: 'Camiseta Vermelha',
       descricao: 'Uma camisa vermelha - é bem vermelha!',
       preco: 29.99,
       urlDaImagem:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+          'https://cea.vtexassets.com/arquivos/ids/10949059-1600-auto?v=637098648287070000&width=1600&height=auto&aspect=true',
     ),
     Product(
       id: 'p2',
@@ -17,7 +19,7 @@ class Products with ChangeNotifier {
       descricao: 'Um par de calças.',
       preco: 59.99,
       urlDaImagem:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://static.netshoes.com.br/produtos/calca-jeans-ecxo-masculina/06/LYU-0332-006/LYU-0332-006_zoom1.jpg?ts=1639474945&',
     ),
     Product(
       id: 'p3',
@@ -26,7 +28,7 @@ class Products with ChangeNotifier {
           'Quente e aconchegane - Exatamente o que você precisa para o inverso.',
       preco: 19.99,
       urlDaImagem:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+          'https://m.media-amazon.com/images/I/71s6u5oCKFL._AC_SX385_.jpg',
     ),
     Product(
       id: 'p4',
@@ -34,7 +36,7 @@ class Products with ChangeNotifier {
       descricao: 'Prepare qualquer refeição',
       preco: 49.99,
       urlDaImagem:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+          'https://polishop.vtexassets.com/arquivos/ids/670479-1200-auto?v=637473563788800000&width=1200&height=auto&aspect=true',
     ),
   ];
 
@@ -51,20 +53,38 @@ class Products with ChangeNotifier {
   }
 
   void add(Product item) {
-    _itens.add(item);
-    //Quando é chamado o notifyListeners
-    //Toda a parte do aplicativo que estiver escutando
-    //será recarregada chamando o método build do widget
-    notifyListeners();
+    //TODO: Fazer requisição
+    final url = Uri.https(
+        'flutter-shop-a4b49-default-rtdb.firebaseio.com', '/products.json');
+
+    http
+        .post(url,
+            body: jsonEncode({
+              'title': item.titulo,
+              'description': item.descricao,
+              'price': item.preco,
+              'imageUrl': item.urlDaImagem,
+              'isFavorite': item.ehFavorito
+            }))
+        .then((response) {
+      item.id = json.decode(response.body)['name'];
+      _itens.add(item);
+      //Quando é chamado o notifyListeners
+      //Toda a parte do aplicativo que estiver escutando
+      //será recarregada chamando o método build do widget
+      notifyListeners();
+    });
   }
 
   void update(Product item) {
+    //TODO: Fazer requisição
     _itens.remove(item);
     _itens.add(item);
     notifyListeners();
   }
 
   void delete(String id) {
+    //TODO: Fazer requisição
     _itens.removeWhere((element) => element.id == id);
     notifyListeners();
   }
