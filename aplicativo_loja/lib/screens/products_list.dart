@@ -1,3 +1,4 @@
+import 'package:aplicativo_loja/providers/products.dart';
 import 'package:aplicativo_loja/widgets/app_drawer.dart';
 
 import '../providers/cart.dart';
@@ -16,50 +17,58 @@ class ListaDeProdutosTela extends StatefulWidget {
 
 class _ListaDeProdutosTelaState extends State<ListaDeProdutosTela> {
   var _mostrarApenasFavoritos = false;
+  var isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      Provider.of<Products>(context).fetchAndSetProducts();
+    }
+    isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Minha Loja'),
-          actions: <Widget>[
-            PopupMenuButton(
-              onSelected: (OpcoesAppBar valorSelecionado) {
-                setState(() {
-                  if (valorSelecionado == OpcoesAppBar.ExibirApenasFavoritos) {
-                    _mostrarApenasFavoritos = true;
-                  } else {
-                    _mostrarApenasFavoritos = false;
-                  }
-                });
-              },
-              icon: Icon(Icons.more_vert),
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                    child: Text('Exibir Favoritos'),
-                    value: OpcoesAppBar.ExibirApenasFavoritos),
-                PopupMenuItem(
-                    child: Text('Mostrar Todos'),
-                    value: OpcoesAppBar.ExibirTodos)
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Minha Loja'),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (OpcoesAppBar valorSelecionado) {
+              setState(() {
+                if (valorSelecionado == OpcoesAppBar.ExibirApenasFavoritos) {
+                  _mostrarApenasFavoritos = true;
+                } else {
+                  _mostrarApenasFavoritos = false;
+                }
+              });
+            },
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                  child: Text('Exibir Favoritos'),
+                  value: OpcoesAppBar.ExibirApenasFavoritos),
+              const PopupMenuItem(
+                  child: Text('Mostrar Todos'), value: OpcoesAppBar.ExibirTodos)
+            ],
+          ),
+          Consumer<Cart>(
+            builder: (_, dadosDoCarrinho, filhoWidget) => SacolaDeProdutos(
+              filho: filhoWidget,
+              valor: dadosDoCarrinho.quantidadeDeItens.toString(),
             ),
-            Consumer<Cart>(
-              builder: (_, dadosDoCarrinho, filhoWidget) => SacolaDeProdutos(
-                filho: filhoWidget,
-                valor: dadosDoCarrinho.quantidadeDeItens.toString(),
-              ),
-              child: IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                },
-              ),
-            )
-          ],
-        ),
-        drawer: AppDrawer(),
-        body: ProductsGrid(_mostrarApenasFavoritos),
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          )
+        ],
       ),
+      drawer: AppDrawer(),
+      body: ProductsGrid(_mostrarApenasFavoritos),
     );
   }
 }
