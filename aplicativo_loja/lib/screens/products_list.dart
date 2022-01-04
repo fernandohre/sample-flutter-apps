@@ -18,11 +18,15 @@ class ListaDeProdutosTela extends StatefulWidget {
 class _ListaDeProdutosTelaState extends State<ListaDeProdutosTela> {
   var _mostrarApenasFavoritos = false;
   var isInit = true;
-
+  var isLoading = true;
   @override
   void didChangeDependencies() {
     if (isInit) {
-      Provider.of<Products>(context).fetchAndSetProducts();
+      Provider.of<Products>(context)
+          .fetchAndSetProducts()
+          .then((value) => setState(() {
+                isLoading = false;
+              }));
     }
     isInit = false;
     super.didChangeDependencies();
@@ -68,7 +72,11 @@ class _ListaDeProdutosTelaState extends State<ListaDeProdutosTela> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_mostrarApenasFavoritos),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_mostrarApenasFavoritos),
     );
   }
 }

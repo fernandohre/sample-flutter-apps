@@ -14,9 +14,9 @@ class UserProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(this.title),
-      leading: CircleAvatar(backgroundImage: NetworkImage(this.urlImage)),
-      trailing: Container(
+      title: Text(title),
+      leading: CircleAvatar(backgroundImage: NetworkImage(urlImage)),
+      trailing: SizedBox(
           width: 100,
           child: Row(children: [
             IconButton(
@@ -24,13 +24,18 @@ class UserProductItem extends StatelessWidget {
                   Navigator.of(context)
                       .pushNamed(EditProductScreen.routeName, arguments: id);
                 },
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 color: Theme.of(context).primaryColor),
             IconButton(
               onPressed: () {
-                Provider.of<Products>(context, listen: false).delete(id);
+                try {
+                  Provider.of<Products>(context, listen: false).delete(id);
+                } catch (error) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(error.toString())));
+                }
               },
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               color: Theme.of(context).errorColor,
             )
           ])),

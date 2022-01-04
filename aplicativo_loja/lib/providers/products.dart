@@ -53,15 +53,15 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    final url = Uri.https(
-        'flutter-shop-a4b49-default-rtdb.firebaseio.com', '/products.json');
+    final newUrl = Uri.parse(
+        'https://flutter-shop-a4b49-default-rtdb.firebaseio.com/products.json');
     try {
-      final response = await http.get(url);
+      final response = await http.get(newUrl);
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       print(data);
 
-      var newProducts = <Product>[];
+      final List<Product> newProducts = [];
 
       data.forEach((key, value) {
         newProducts.add(
@@ -74,6 +74,7 @@ class Products with ChangeNotifier {
         );
       });
       _itens = newProducts;
+      notifyListeners();
     } catch (error) {
       print(error);
       throw error;
@@ -105,15 +106,34 @@ class Products with ChangeNotifier {
     }
   }
 
-  void update(Product item) {
-    _itens.remove(item);
-    _itens.add(item);
+  Future<void> update(Product item) async {
+    final prodIndex = _itens.indexWhere((element) => element.id == item.id);
+    final prodId = item.id;
+    if (prodIndex >= 0) {
+      final url = Uri.parse(
+          'https://flutter-shop-a4b49-default-rtdb.firebaseio.com/products/$prodId.json');
+      await http.patch(url,
+          body: jsonEncode({
+            'title': item.titulo,
+            'description': item.descricao,
+            'price': item.preco,
+            'isFavorite': item.ehFavorito,
+            'imageUrl': item.urlDaImagem
+          }));
+    }
+    _itens[prodIndex] = item;
     notifyListeners();
   }
 
-  void delete(String id) {
-    _itens.removeWhere((element) => element.id == id);
+  Future<void> delete(String id) async {
+    final url = Uri.parse(
+        'https://flutter-shop-a4b49-default-rtdb.firebaseio.com/products/$id.json');
+    final existingProductIndex = _itens.indexWhere((x) => x.id == id);
+    // var existingProduct = _itens[existingProductIndex];
+    _itens.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(url);
+    print(response);
   }
 
   Product findById(String id) {
