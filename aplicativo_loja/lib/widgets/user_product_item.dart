@@ -1,6 +1,5 @@
 import 'package:aplicativo_loja/providers/products.dart';
 import 'package:aplicativo_loja/widgets/edit_product_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

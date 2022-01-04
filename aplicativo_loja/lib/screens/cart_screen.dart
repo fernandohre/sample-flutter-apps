@@ -17,22 +17,22 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Carrinho de compras'),
+          title: const Text('Carrinho de compras'),
         ),
         body: Column(
           children: <Widget>[
             Card(
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Total:',
                       style: TextStyle(fontSize: 20),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Chip(
                       label: Text(
                         'R\$${carrinho.precoTotalDosItens}',
@@ -44,23 +44,12 @@ class CartScreen extends StatelessWidget {
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
-                    TextButton(
-                      child: Text(
-                        'Buy Now!',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                      onPressed: () {
-                        Provider.of<Orders>(context, listen: false).doOrder(
-                            carrinho.itens.values.toList(),
-                            carrinho.precoTotalDosItens);
-                        carrinho.clear();
-                      },
-                    )
+                    OrderButton(carrinho: carrinho)
                   ],
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Expanded(
@@ -75,5 +64,44 @@ class CartScreen extends StatelessWidget {
             ))
           ],
         ));
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.carrinho,
+  }) : super(key: key);
+
+  final Cart carrinho;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: isLoading
+          ? const CircularProgressIndicator()
+          : Text(
+              'Buy Now!',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+      onPressed: widget.carrinho.quantidadeDeItens <= 0
+          ? null
+          : () async {
+              setState(() {
+                isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).doOrder(
+                  widget.carrinho.itens.values.toList(),
+                  widget.carrinho.precoTotalDosItens);
+              widget.carrinho.clear();
+            },
+    );
   }
 }
